@@ -92,3 +92,5 @@ Base URL: `/api`
   "createdAt": "2025-12-20T10:30:00"
 }
 ```
+screenshot 
+![img.png](img.png)
