@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const API_BASE = 'http://localhost:8080/ConfessionWall/api'
 
 const handleResponse = async (response) => {
   if (!response.ok) {
@@ -59,7 +59,10 @@ export const confessionsAPI = {
     body: JSON.stringify({ content }),
   }),
 
-  like: (id) => apiRequest(`/confessions/${id}/like`, {
+  like: (id) => apiRequest(`/confessions/likes?id=${id}`, {
+    method: 'POST',
+  }),
+   unlike: (id) => apiRequest(`/confessions/likes?id=${id}&action=unlike`, {
     method: 'POST',
   }),
 
@@ -72,14 +75,20 @@ export const confessionsAPI = {
 export const adviceAPI = {
   getAll: () => apiRequest('/advice'),
 
+  getByConfessionId: (confessionId) => apiRequest(`/advice?confessionId=${confessionId}`),
+
   getById: (id) => apiRequest(`/advice/${id}`),
 
-  create: (content) => apiRequest('/advice', {
+  create: (content, confessionId) => apiRequest('/advice', {
     method: 'POST',
-    body: JSON.stringify({ content }),
+    body: JSON.stringify({ content, confessionId }),
   }),
 
-  like: (id) => apiRequest(`/advice/${id}/like`, {
+  like: (id) => apiRequest(`/advice/likes?id=${id}`, {
+    method: 'POST',
+  }),
+
+  unlike: (id) => apiRequest(`/advice/likes?id=${id}&action=unlike`, {
     method: 'POST',
   }),
 
