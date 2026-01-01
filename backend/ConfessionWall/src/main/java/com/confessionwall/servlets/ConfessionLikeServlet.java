@@ -22,34 +22,33 @@ public class ConfessionLikeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 1. Get the confession ID from the query parameter (e.g., /api/likes?id=5)
-        String idParam = request.getParameter("id");
+    	 String idParam = request.getParameter("id");
+         String action = request.getParameter("action");
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+         response.setContentType("application/json");
+         response.setCharacterEncoding("UTF-8");
 
-        if (idParam == null || idParam.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\": \"Missing confession ID\"}");
-            return;
-        }
+         if (idParam == null || idParam.isEmpty()) {
+             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             return;
+         }
 
-        try {
-            int id = Integer.parseInt(idParam);
-            
-            // 2. Call the DAO to increment the like count
-            confessionDAO.incrementLikes(id);
+         try {
+             int id = Integer.parseInt(idParam);
+             
+             if ("unlike".equals(action)) {
+                 confessionDAO.decrementLikes(id);
+                 response.getWriter().write("{\"message\": \"Like removed\"}");
+             } else {
+                 confessionDAO.incrementLikes(id);
+                 response.getWriter().write("{\"message\": \"Like added\"}");
+             }
+             
+             response.setStatus(HttpServletResponse.SC_OK);
 
-            // 3. Return success
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write("{\"message\": \"Like added successfully\"}");
-
-        } catch (NumberFormatException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\": \"Invalid ID format\"}");
-        } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
-        }
+         } catch (Exception e) {
+             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+             e.printStackTrace();
+         }
     }
 }

@@ -66,4 +66,16 @@ public class ConfessionDAO {
             e.printStackTrace();
         }
     }
+	
+	public void decrementLikes(int id) {
+       
+        String sql = "UPDATE confessions SET likes = likes - 1 WHERE id = ? AND likes > 0";
+        try (Connection conn = DBConnectionUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
